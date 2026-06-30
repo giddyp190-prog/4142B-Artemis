@@ -12,7 +12,6 @@
 #include "../../include/pros/misc.hpp" // IWYU pragma: keep
 #include "../../include/pros/screen.hpp" // IWYU pragma: keep
 #include "../../include/pros/rtos.hpp" // IWYU pragma: keep
-#include "robotConfigs.h"
 
 namespace ts
 {

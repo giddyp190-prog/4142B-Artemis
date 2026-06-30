@@ -4,6 +4,8 @@
 #include "pros/motor_group.hpp"
 #include "pros/motors.hpp"
 #include "autons.h"
+#include "pros/optical.hpp"
+#include "pros/rotation.hpp"
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -29,18 +31,30 @@ lemlib::Drivetrain drivetrain(&left_motor_group, // left motor group
                               8 // horizontal drift is 2 (for now)
 );
 
+pros::Motor left_lift_motor(1);
+pros::Motor right_lift_motor(2);
+
+pros::MotorGroup lift_motors({1,1}, pros::MotorGears::red);
+
+pros::Motor intake_motor(19);
+
 // imu
 pros::Imu imu(10); 
 // vertical tracking wheel encoder
-pros::Rotation vertical_encoder(20); 
+pros::Rotation vertical_encoder(0); 
+// optical sensor (toggle)
+pros::Optical toggle_optical(20);
+// lift rotation sensor
+pros::Rotation lift_encoder(21);
+
 // vertical tracking wheel encoder
 lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -2.5);
 
 // odometry settings
 lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel 1, set to null
-                            nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-                            nullptr, // horizontal tracking wheel 1
-                            nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
+                            nullptr, // vertical tracking wheel 2, set to nullptr as we dont use one
+                            nullptr, // horizontal tracking wheel 1, set to nullptr as we dont use one
+                            nullptr, // horizontal tracking wheel 2, set to nullptr as we dont use one
                             &imu // inertial sensor
 );
 

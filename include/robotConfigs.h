@@ -5,6 +5,7 @@
 
 #include "pros/imu.hpp"
 #include "pros/misc.hpp"
+#include "pros/optical.hpp"
 #include "pros/rotation.hpp"
 #include "pros/motors.hpp"
 #include "pros/motor_group.hpp"
@@ -33,6 +34,9 @@ extern pros::Motor intake_motor;
 
 extern pros::Imu imu;
 extern pros::Rotation vertical_encoder;
+extern pros::Optical toggle_optical;
+extern pros::Rotation lift_encoder;
+
 extern lemlib::TrackingWheel vertical_tracking_wheel;
 
 extern lemlib::OdomSensors odom_sensors;
