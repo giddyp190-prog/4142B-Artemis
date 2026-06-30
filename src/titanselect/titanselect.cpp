@@ -10,13 +10,15 @@
 #include <functional>
 #include "../../include/liblvgl/lvgl.h" // IWYU pragma: keep
 #include "../../include/pros/misc.hpp" // IWYU pragma: keep
+#include "../../include/pros/screen.hpp" // IWYU pragma: keep
 #include "../../include/pros/rtos.hpp" // IWYU pragma: keep
+#include "robotConfigs.h"
 
 namespace ts
 {
-    constexpr auto SELECTOR_ROWS = 4;
-    constexpr auto SELECTOR_COLS = 4;
-    constexpr auto SELECTOR_HEIGHT = 200;
+    constexpr auto SELECTOR_ROWS = 3;
+    constexpr auto SELECTOR_COLS = 3;
+    constexpr auto SELECTOR_HEIGHT = 150;
     constexpr auto SELECTOR_WIDTH = 475;
     constexpr auto SELECTOR_X_OFFSET = 0;
     constexpr auto SELECTOR_Y_OFFSET = 0;
@@ -202,6 +204,7 @@ void ts::selector::display()
 {
     set_lv_obj_visibility(objects.l_button_matrix, false);
     set_lv_obj_visibility(objects.l_selected_auton_label, false);
+
 }
 
 void ts::selector::hide()

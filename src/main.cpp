@@ -1,32 +1,59 @@
 #include "main.h"
-#include "autons.h"
 #include "robotConfigs.h"
 #include "titanselect/titanselect.hpp"
 
 ts::selector* selector = ts::selector::get();
+
+pros::Optical optical_sensor(20);
+pros::Motor toggle_Motor(19, pros::MotorGears::red);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
+
  */
-void initialize() {
-	/*pros::lcd::initialize(); // initialize brain screen
-    chassis.calibrate(); // calibrate sensors
-    // print position to brain screen
-    pros::Task screen_task([&]() {
-        while (true) {
-            // print robot location to the brain screen
-            pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-            pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-            pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-			pros::lcd::print(1, "Rotation Sensor: %i", vertical_encoder.get_position());
-            // delay to save resources
-            pros::delay(20);
+
+void toggle(int setting, int timeout) {
+    optical_sensor.set_led_pwm(100); //Turns on light for the optical
+    toggle_Motor.move(127); //Spin the motor max speed
+    
+    int time_spent = 0;
+
+    while (time_spent < timeout) { 
+        double hue = optical_sensor.get_hue(); 
+        bool is_blue = (hue > 190 && hue < 215); //Rnage for blue hue
+        bool is_red  = (hue > 5 && hue < 30); //Range for red hue
+
+        if ((setting == 1 && is_blue) || (setting == 2 && is_red)) { //If we have the correct color
+            toggle_Motor.move(0); //Stops the motor
+            optical_sensor.set_led_pwm(0); //Turn off light
+            return; // Exit the function 
         }
-    });*/
+
+        pros::delay(10); //Relaxes CPU
+        time_spent += 10; // Track time elapsed
+    }
+    
+    // If we reach here, it timed out without seeing the color
+    toggle_Motor.move(0); // Safety shutoff
+}
+
+void initialize() {
+    chassis.calibrate(); // calibrate sensors
     ts::selector::get()->display();
+
+    toggle(2, 5000);
+
+    while (true) {
+        pros::screen::set_pen(pros::c::COLOR_WHITE);
+        pros::screen::print(pros::E_TEXT_SMALL, 9, "X: %f", chassis.getPose().x);
+        pros::screen::print(pros::E_TEXT_SMALL, 10, "Y: %f", chassis.getPose().y);
+        pros::screen::print(pros::E_TEXT_SMALL, 11, "Theta: %f", chassis.getPose().theta);
+
+        pros::delay(20);
+    }
 }
 
 /**
@@ -89,6 +116,8 @@ void opcontrol() {
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // move the robot
+
+
         chassis.curvature(leftY, rightX);
 
         // delay to save resources
