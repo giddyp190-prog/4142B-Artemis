@@ -5,7 +5,7 @@ void toggle(int setting, int timeout) {
     toggle_optical.set_led_pwm(100); //Turns on light for the optical
     intake_motor.move(127); //Spin the motor max speed
     
-    int time_spent = 0;
+    int time_spent = 0; // Initialize time spent to 0
 
     while (time_spent < timeout) { 
         double hue = toggle_optical.get_hue(); 
