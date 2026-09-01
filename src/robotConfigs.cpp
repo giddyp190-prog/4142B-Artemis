@@ -37,6 +37,7 @@ pros::Motor right_lift_motor(2);
 pros::MotorGroup lift_motors({1,1}, pros::MotorGears::red);
 
 pros::Motor intake_motor(19);
+pros::Motor pivot_Motor(20);
 
 // imu
 pros::Imu imu(10); 

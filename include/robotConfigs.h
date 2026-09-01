@@ -31,6 +31,7 @@ extern pros::Motor right_lift_motor;
 extern pros::MotorGroup lift_motors;
 
 extern pros::Motor intake_motor;
+extern pros::Motor pivot_Motor;
 
 extern pros::Imu imu;
 extern pros::Rotation vertical_encoder;

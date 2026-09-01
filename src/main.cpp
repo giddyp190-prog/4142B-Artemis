@@ -23,8 +23,6 @@ void initialize() {
     chassis.calibrate(); // calibrate sensors
     ts::selector::get()->display();
 
-    toggle(2, 5000);
-
     while (true) {
         pros::screen::set_pen(pros::c::COLOR_WHITE);
         pros::screen::print(pros::E_TEXT_SMALL, 9, "X: %f", chassis.getPose().x);
@@ -95,7 +93,6 @@ void opcontrol() {
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // move the robot
-
 
         chassis.curvature(leftY, rightX);
 

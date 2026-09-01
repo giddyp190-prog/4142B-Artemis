@@ -1,6 +1,7 @@
-#include "subsystems/toggle.h"
+#include "subsystems/pivot.h"
 #include "robotConfigs.h"
 
+/*
 void toggle(int setting, int timeout) {
     toggle_optical.set_led_pwm(100); //Turns on light for the optical
     intake_motor.move(127); //Spin the motor max speed
@@ -24,4 +25,8 @@ void toggle(int setting, int timeout) {
     
     // If we reach here, it timed out without seeing the color
     intake_motor.move(0); // Safety shutoff
+} */
+
+void setPivot(int deg){
+    pivot_Motor.move_absolute(deg, 100); // Move the pivot motor to the specified degree at speed 100
 }
