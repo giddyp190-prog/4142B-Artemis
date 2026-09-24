@@ -1,15 +1,12 @@
 #include "main.h"
+#include "pros/misc.h"
 #include "robotConfigs.h"
 #include "titanselect/titanselect.hpp"
 
 #include "subsystems/intake.h"
-#include "subsystems/toggle.h"
 #include "subsystems/lift.h"
 
 ts::selector* selector = ts::selector::get();
-
-pros::Optical optical_sensor(20);
-pros::Motor toggle_Motor(19, pros::MotorGears::red);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -22,15 +19,6 @@ pros::Motor toggle_Motor(19, pros::MotorGears::red);
 void initialize() {
     chassis.calibrate(); // calibrate sensors
     ts::selector::get()->display();
-
-    while (true) {
-        pros::screen::set_pen(pros::c::COLOR_WHITE);
-        pros::screen::print(pros::E_TEXT_SMALL, 9, "X: %f", chassis.getPose().x);
-        pros::screen::print(pros::E_TEXT_SMALL, 10, "Y: %f", chassis.getPose().y);
-        pros::screen::print(pros::E_TEXT_SMALL, 11, "Theta: %f", chassis.getPose().theta);
-
-        pros::delay(20);
-    }
 }
 
 /**
@@ -93,6 +81,30 @@ void opcontrol() {
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // move the robot
+
+        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            intake_motor.move(127);
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            intake_motor.move(-127);
+        } else {
+            intake_motor.move(0);
+        }
+
+        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            lift_motors.move(62);
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            lift_motors.move(-62);
+        } else {
+            lift_motors.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+            lift_motors.move(0);
+        }
+
+        pros::screen::set_pen(pros::c::COLOR_WHITE);
+        pros::screen::print(pros::E_TEXT_SMALL, 9, "X: %f", chassis.getPose().x);
+        pros::screen::print(pros::E_TEXT_SMALL, 10, "Y: %f", chassis.getPose().y);
+        pros::screen::print(pros::E_TEXT_SMALL, 11, "Theta: %f", chassis.getPose().theta);
+
+        pros::delay(20);
 
         chassis.curvature(leftY, rightX);
 

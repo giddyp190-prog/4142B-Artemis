@@ -4,7 +4,6 @@
 #include "pros/motor_group.hpp"
 #include "pros/motors.hpp"
 #include "autons.h"
-#include "pros/optical.hpp"
 #include "pros/rotation.hpp"
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -31,20 +30,19 @@ lemlib::Drivetrain drivetrain(&left_motor_group, // left motor group
                               8 // horizontal drift is 2 (for now)
 );
 
-pros::Motor left_lift_motor(1);
-pros::Motor right_lift_motor(2);
+pros::Motor left_lift_motor(12);
+pros::Motor right_lift_motor(-17);
 
-pros::MotorGroup lift_motors({1,1}, pros::MotorGears::red);
+pros::MotorGroup lift_motors({12,-17}, pros::MotorGears::red);
 
-pros::Motor intake_motor(19);
+pros::Motor intake_motor(9, pros::MotorGears::green);
 pros::Motor pivot_Motor(20);
 
 // imu
 pros::Imu imu(10); 
 // vertical tracking wheel encoder
 pros::Rotation vertical_encoder(0); 
-// optical sensor (toggle)
-pros::Optical toggle_optical(20);
+
 // lift rotation sensor
 pros::Rotation lift_encoder(21);
 
