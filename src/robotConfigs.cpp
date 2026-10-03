@@ -17,14 +17,14 @@ pros::Motor right_middle_motor(5, pros::MotorGears::blue);
 pros::Motor right_back_motor(6, pros::MotorGears::green);
 
 // left motor group
-pros::MotorGroup left_motor_group({1, 2, 3}, pros::MotorGears::blue);
+pros::MotorGroup left_motor_group({-5, -7, -8}, pros::MotorGears::blue);
 // right motor group
-pros::MotorGroup right_motor_group({4, 5, 6}, pros::MotorGears::blue);
+pros::MotorGroup right_motor_group({3, 20, 16}, pros::MotorGears::blue);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&left_motor_group, // left motor group
                               &right_motor_group, // right motor group
-                              11.5, // 10 inch track width
+                              12, // 10 inch track width
                               lemlib::Omniwheel::NEW_275, // using new 4" omnis
                               450, // drivetrain rpm is 360
                               8 // horizontal drift is 2 (for now)
@@ -36,18 +36,17 @@ pros::Motor right_lift_motor(-17);
 pros::MotorGroup lift_motors({12,-17}, pros::MotorGears::red);
 
 pros::Motor intake_motor(9, pros::MotorGears::green);
-pros::Motor pivot_Motor(20);
 
 // imu
 pros::Imu imu(10); 
 // vertical tracking wheel encoder
-pros::Rotation vertical_encoder(0); 
+pros::Rotation vertical_encoder(18); 
 
 // lift rotation sensor
-pros::Rotation lift_encoder(21);
+pros::Rotation lift_encoder(19);
 
 // vertical tracking wheel encoder
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -2.5);
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, 0);
 
 // odometry settings
 lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel 1, set to null

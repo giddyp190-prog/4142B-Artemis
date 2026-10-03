@@ -17,7 +17,7 @@ ts::selector* selector = ts::selector::get();
  */
 
 void initialize() {
-    chassis.calibrate(); // calibrate sensors
+    chassis.calibrate(); // calibrate sensors and chassis coordinates
     ts::selector::get()->display();
 }
 
@@ -26,7 +26,9 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+    
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -58,7 +60,22 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	selector->run_selected_auton();
+
+    
+    intake_motor.move(50);
+   chassis.setPose(0,0,0); // reset chassis cords
+
+    chassis.moveToPoint(0, 13, 500);
+    //chassis.moveToPoint(0, -6,500, {.forwards = false});
+  //lift_motors.move(-40);
+    //set_lift_target(-40);
+   //target_position = -40;
+        pros::delay(200); // Run every 20ms
+       //  chassis.moveToPoint(0, 13, 500);
+    chassis.turnToHeading(-90, 500);
+     pros::delay(1000);
+    lift_motors.move_absolute(-20, 50);
+    
 }
 
 /**
@@ -80,33 +97,30 @@ void opcontrol() {
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-        // move the robot
+        lift_motors.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
 
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake_motor.move(127);
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            intake_motor.move(-127);
+            intake_motor.move(-60);
         } else {
-            intake_motor.move(0);
+            intake_motor.move(60);
         }
 
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            lift_motors.move(62);
+            lift_motors.move(65);
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            lift_motors.move(-62);
+            lift_motors.move(-90);
         } else {
-            lift_motors.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
             lift_motors.move(0);
-        }
+        } 
+
+        chassis.curvature(leftY, rightX); // main drive function
 
         pros::screen::set_pen(pros::c::COLOR_WHITE);
         pros::screen::print(pros::E_TEXT_SMALL, 9, "X: %f", chassis.getPose().x);
         pros::screen::print(pros::E_TEXT_SMALL, 10, "Y: %f", chassis.getPose().y);
         pros::screen::print(pros::E_TEXT_SMALL, 11, "Theta: %f", chassis.getPose().theta);
-
-        pros::delay(20);
-
-        chassis.curvature(leftY, rightX);
 
         // delay to save resources
         pros::delay(25);

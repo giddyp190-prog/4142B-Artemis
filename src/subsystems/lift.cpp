@@ -7,7 +7,8 @@ double target_position = 0.0;
 lemlib::PID lift_pid(
     0.5,
     0.0, 
-    0.0
+    0.0,
+    false
 );
 
 void lift_logic() {
