@@ -3,10 +3,12 @@
 
 #include "titanselect/titanselect.hpp"
 
+#include "subsystems/lift.h"
+
 // lateral PID controller
-lemlib::ControllerSettings lateral_controller_settings(6, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller_settings(7.4, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              0.25, // derivative gain (kD)
+                                              0, // derivative gain (kD)
                                               3, // anti windup
                                               0.5, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -44,11 +46,35 @@ ts::auton programSkills("Skills", programming_skills_auton);
 void red_left_auton() {
     chassis.setPose(0,0,0);
 
-    chassis.moveToPoint(0,18,999999999);
+    //chassis.turnToHeading(90, 2000);
+    set_lift_target(-400.0);
 }
 
 void red_right_auton() {
     chassis.setPose(0,0,0);
+
+    intake_motor.move(50);
+    chassis.moveToPose(-19.75, 13, -90, 2000);
+    lift_motors.move(-40);
+    pros::delay(1750);
+    lift_motors.move(0);
+    pros::delay(1000);
+    intake_motor.move(-30);
+    pros::delay(250);
+    chassis.moveToPose(8, 13.22, -90, 2000000, {.forwards=false});
+    intake_motor.move(127);
+    chassis.moveToPose(9, -0.5, 180, 2000);
+     chassis.moveToPose(9, 8, 180, 2000,{.forwards=false});
+    chassis.moveToPose(-2, 54, 0, 2000000,{.minSpeed = 60});
+    pros::delay(1000);
+    lift_motors.move(-50);
+    pros::delay(1500);
+     lift_motors.move(0);
+     pros::delay(1250);
+    intake_motor.move(-30);
+    pros::delay(750);
+    intake_motor.move(0);
+    chassis.moveToPose(-2, 48, 0, 2000000, {.forwards=false});
 }
 
 void red_left_elims_auton() {

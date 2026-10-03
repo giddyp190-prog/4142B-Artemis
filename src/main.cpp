@@ -1,4 +1,5 @@
 #include "main.h"
+#include "lemlib/chassis/chassis.hpp"
 #include "pros/misc.h"
 #include "robotConfigs.h"
 #include "titanselect/titanselect.hpp"
@@ -16,9 +17,15 @@ ts::selector* selector = ts::selector::get();
 
  */
 
+ pros::Task* lift_task = nullptr;
+
 void initialize() {
     chassis.calibrate(); // calibrate sensors and chassis coordinates
+    lift_encoder.reset_position(); // zero sensor on startup
+    controller.clear();
     ts::selector::get()->display();
+
+    lift_task = new pros::Task(lift_logic, "Lift PID Task");
 }
 
 /**
@@ -60,22 +67,20 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+    selector->run_selected_auton(); // run the selected auton
 
-    
-    intake_motor.move(50);
-   chassis.setPose(0,0,0); // reset chassis cords
-
-    chassis.moveToPoint(0, 13, 500);
-    //chassis.moveToPoint(0, -6,500, {.forwards = false});
-  //lift_motors.move(-40);
-    //set_lift_target(-40);
-   //target_position = -40;
-        pros::delay(200); // Run every 20ms
-       //  chassis.moveToPoint(0, 13, 500);
-    chassis.turnToHeading(-90, 500);
+    selector->run_auton("Red Left");
+   //chassis.moveToPoint(0, -9.2, 2000, {.minSpeed = 50});
+   /*lift_motors.move(-50);
+    pros::delay(1500);
+     lift_motors.move(0);
      pros::delay(1000);
-    lift_motors.move_absolute(-20, 50);
-    
+    intake_motor.move(-30);
+    pros::delay(250);
+    intake_motor.move(0);
+    chassis.moveToPoint(-10, 13.22, 20000, {.forwards = false});
+     //chassis.moveToPose(8.2, 1.5, 180, 2000);
+    //intake_motor.move(50);*/
 }
 
 /**
@@ -91,13 +96,21 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+// max = -810
 void opcontrol() {
+    if (lift_task != nullptr) {
+        lift_task->remove(); 
+        lift_task = nullptr; // Reset pointer for safety
+    }
+
+    lift_motors.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+
     while (true) {
         // get left y and right x positions
+
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-
-        lift_motors.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
 
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake_motor.move(127);
@@ -107,13 +120,17 @@ void opcontrol() {
             intake_motor.move(60);
         }
 
-        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            lift_motors.move(65);
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            lift_motors.move(-90);
+        double current_position = -lift_encoder.get_position() / 100.0;
+
+        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && current_position < 700.0) {
+            lift_motors.move(-70);
+        } else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && current_position > 0.0) {
+            lift_motors.move(70);
         } else {
             lift_motors.move(0);
-        } 
+        }
+
+        controller.print(1, 0, "Lift: %f", current_position);
 
         chassis.curvature(leftY, rightX); // main drive function
 
