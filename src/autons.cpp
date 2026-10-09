@@ -12,7 +12,7 @@ lemlib::ControllerSettings lateral_controller_settings(7.4, // proportional gain
                                               3, // anti windup
                                               0.5, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
-                                              1, // large error range, in inches
+                                              0.5, // large error range, in inches
                                               500, // large error range timeout, in milliseconds
                                               20 // maximum acceleration (slew)
 );
@@ -29,8 +29,6 @@ lemlib::ControllerSettings angular_controller_settings(1.9, // proportional gain
                                               0 // maximum acceleration (slew)
 );
 
-
-
 ts::auton red_L("Red Left", red_left_auton);
 ts::auton red_R("Red Right", red_right_auton);
 ts::auton red_eL("Red L Elims", red_left_elims_auton);
@@ -45,52 +43,217 @@ ts::auton programSkills("Skills", programming_skills_auton);
 
 void red_left_auton() {
     chassis.setPose(0,0,0);
-
-    //chassis.turnToHeading(90, 2000);
-    set_lift_target(-400.0);
+    intake_motor.move(80);
+    //set_lift_target(-80, 100);
+    chassis.moveToPose(0,12,0, 500,{.minSpeed = 60});
+    chassis.moveToPose(19.85, 12.5, 90, 1250);
+    set_lift_target(-85, 100);
+    pros::delay(1750);
+    set_lift_target(-10, 100);
+    intake_motor.move(-30);
+    pros::delay(100);
+    set_lift_target(0, 85);
+    pros::delay(250);
+    chassis.moveToPose(-7, 13.22, 90, 750, {.forwards=false,.minSpeed = 60});
+    intake_motor.move(127);
+    chassis.moveToPose(-5.5, -0.65, 180, 1500);
+    pros::delay(500);
+    chassis.moveToPose(-5.5, 8, 180, 1250,{.forwards=false});
+    chassis.moveToPose(2.5, 53.5, 0, 2000,{.minSpeed = 60});
+    pros::delay(1000);
+    set_lift_target(-150, 100);
+    pros::delay(1250);
+    intake_motor.move(-30);
+    set_lift_target(-0, 100);
+    pros::delay(250);
+    intake_motor.move(0);
+    chassis.moveToPose(2.5, 32, 0, 2000, {.forwards=false,.minSpeed = 110});
+    chassis.moveToPose(45, 32, -90, 1250, {.forwards=false,.minSpeed = 110,.earlyExitRange = 5});
+    chassis.moveToPose(50, 6, 0, 1750,{.forwards=false,.minSpeed = 110,.earlyExitRange = 5});
+    //set_lift_target(-470,75);
+  //  pros::delay(500);
+    chassis.moveToPoint(50, -5 , 1000,{.forwards=false,.minSpeed = 127});
+    //pros::delay(250);
+   // set_lift_target(-350,100); 
+    chassis.moveToPoint(50, 6, 1000,{.minSpeed = 127});
+    chassis.moveToPoint(50, -5, 1000,{.forwards=false, .minSpeed = 127});
+    chassis.moveToPoint(50, 6,  1000,{.minSpeed = 127});
+    
 }
 
 void red_right_auton() {
-    chassis.setPose(0,0,0);
-
-    intake_motor.move(50);
-    chassis.moveToPose(-19.75, 13, -90, 2000);
-    lift_motors.move(-40);
+     chassis.setPose(0,0,0);
+    intake_motor.move(80);
+    set_lift_target(-80, 100);
+    pros::delay(500); 
+    chassis.moveToPose(0,12,0, 750,{.minSpeed = 60});
+    chassis.moveToPose(-19.85, 12.5, -90, 1500);
+    set_lift_target(-90, 100);
     pros::delay(1750);
-    lift_motors.move(0);
-    pros::delay(1000);
+    set_lift_target(-10, 100);
     intake_motor.move(-30);
+    pros::delay(100);
+    set_lift_target(0, 85);
     pros::delay(250);
-    chassis.moveToPose(8, 13.22, -90, 2000000, {.forwards=false});
+    chassis.moveToPose(7, 13.22, -90, 750, {.forwards=false,.minSpeed = 60});
     intake_motor.move(127);
-    chassis.moveToPose(9, -0.5, 180, 2000);
-     chassis.moveToPose(9, 8, 180, 2000,{.forwards=false});
-    chassis.moveToPose(-2, 54, 0, 2000000,{.minSpeed = 60});
+    chassis.moveToPose(5.5, -0.65, 180, 1500);
+    pros::delay(500);
+    chassis.moveToPose(5.5, 8, 180, 1250,{.forwards=false});
+    chassis.moveToPose(-2.5, 53.5, 0, 2000,{.minSpeed = 60});
     pros::delay(1000);
-    lift_motors.move(-50);
-    pros::delay(1500);
-     lift_motors.move(0);
-     pros::delay(1250);
+    set_lift_target(-150, 100);
+    pros::delay(1250);
     intake_motor.move(-30);
-    pros::delay(750);
+    set_lift_target(-0, 100);
+    pros::delay(250);
     intake_motor.move(0);
-    chassis.moveToPose(-2, 48, 0, 2000000, {.forwards=false});
+    chassis.moveToPose(-2.5, 32, 0, 2000, {.forwards=false,.minSpeed = 100});
+    chassis.moveToPose(-40, 32, 90, 1250, {.forwards=false,.minSpeed = 100});
+    chassis.moveToPose(-50, 6, 0, 1750,{.forwards=false});
+    set_lift_target(-470,100);
+    chassis.moveToPose(-50, -1, 0, 1500,{.forwards=false});
+    pros::delay(250);
+    set_lift_target(-350,100); 
+    chassis.moveToPose(-50, 6, 0, 1750,{.minSpeed = 100});
 }
 
 void red_left_elims_auton() {
     chassis.setPose(0,0,0);
+    intake_motor.move(80);
+    set_lift_target(-50, 100);
+    pros::delay(500);
+    chassis.moveToPose(0,12,0, 750,{.minSpeed = 60});
+    chassis.moveToPose(-19.85, 12.5, -90, 1500);
+    set_lift_target(-85, 100);
+    pros::delay(1750);
+    set_lift_target(-10, 100);
+    intake_motor.move(-30);
+    pros::delay(100);
+    set_lift_target(0, 85);
+    pros::delay(250);
+    chassis.moveToPose(7, 13.22, -90, 750, {.forwards=false,.minSpeed = 60});
+    intake_motor.move(127);
+    chassis.moveToPose(5.5, -0.65, 180, 1500);
+    pros::delay(500);
+    chassis.moveToPose(5.5, 8, 180, 1250,{.forwards=false});
+    chassis.moveToPose(-2.5, 53.5, 0, 2000,{.minSpeed = 60});
+    pros::delay(1000);
+    set_lift_target(-150, 100);
+    pros::delay(1250);
+    intake_motor.move(-30);
+    set_lift_target(-0, 100);
+    pros::delay(250);
+    intake_motor.move(0);
+    chassis.moveToPose(-2.5, 32, 0, 2000, {.forwards=false,.minSpeed = 100});
+    chassis.moveToPose(-40, 32, 90, 1250, {.forwards=false,.minSpeed = 100});
+    chassis.moveToPose(-50, 6, 0, 1750,{.forwards=false});
+    set_lift_target(-500,100);
+    chassis.moveToPose(-50, -1, 0, 1750,{.forwards=false});
+    pros::delay(750);
+    set_lift_target(-350,100);
+    chassis.moveToPose(-50, 6, 0, 1750,{.minSpeed = 100});
 }
 
 void red_right_elims_auton() {
     chassis.setPose(0,0,0);
+    intake_motor.move(80);
+    chassis.moveToPose(0,15,0, 750,{.minSpeed = 60});
+    chassis.moveToPose(0,15,90, 1250,{.minSpeed = 60});
+    chassis.moveToPose(11.5,15,90, 1250,{.minSpeed = 60});
+    chassis.moveToPose(11.5,22,0, 3000);
+    set_lift_target(-80, 100);
+    pros::delay(1000);
+    set_lift_target(-45, 100);
+    intake_motor.move(-30);
+    pros::delay(1000);
+    set_lift_target(0, 85);
+    pros::delay(250);
+    intake_motor.move(-80);
 }
 
-void blue_left_auton() {
+void blue_left_auton() {    
     chassis.setPose(0,0,0);
+    intake_motor.move(80);
+    chassis.moveToPoint(0, 6, 2000);
+    chassis.moveToPose(11.5, 24, 0, 5000);
+    set_lift_target(-80, 100);
+    pros::delay(1750);
+    set_lift_target(-35, 50);
+    //pros::delay(1000);
+    intake_motor.move(-30);
+    //pros::delay(1000);
+    set_lift_target(-20, 85);
+    //pros::delay(250);
+    intake_motor.move(-30);
+    chassis.moveToPoint(11.3, -7, 750,{.forwards=false});
+    chassis.turnToHeading(-90, 1000);
+    intake_motor.move(127);
+    chassis.moveToPoint(-1.5, -7, 2000);
+    pros::delay(1000);
+    chassis.moveToPoint(11.5, -7, 2000,{.forwards=false});
+    chassis.turnToHeading(0, 1000);
+    chassis.moveToPoint(11.25, 20, 3000);
+    set_lift_target(-165, 70);
+    pros::delay(1750);
+    set_lift_target(-160, 100);
+    intake_motor.move(-30);
+    pros::delay(1000);
+    set_lift_target(0, 85);
+    pros::delay(500);
+    intake_motor.move(-80);
+    chassis.moveToPoint(11.5, -7, 1500,{.forwards=false});
+    chassis.turnToHeading(-90, 750);
+    intake_motor.move(127);chassis.moveToPoint(-1.5, -7, 2000);
+    pros::delay(1000);
 }
 
 void blue_right_auton() {
     chassis.setPose(0,0,0);
+    intake_motor.move(80);
+    chassis.moveToPoint(0, 6, 750);
+    // chassis.turnToHeading(90, 500);
+    chassis.moveToPose(11.5, 23, 0, 2000);
+    set_lift_target(-85, 100);
+    pros::delay(1750);
+    set_lift_target(-35, 100);
+    //pros::delay(1000);
+    intake_motor.move(-30);
+    //pros::delay(1000);
+    set_lift_target(-20, 85);
+    //pros::delay(250);
+    intake_motor.move(-30);
+    chassis.moveToPoint(11.5, -6, 1000,{.forwards=false,.minSpeed = 50});
+    pros::delay(250);
+    chassis.turnToHeading(-90, 500);
+    intake_motor.move(127);
+    chassis.moveToPoint(-1.5, -6, 1000);
+    pros::delay(1000);
+    chassis.moveToPoint(11.5, -6, 1000,{.forwards=false,.minSpeed = 50});
+    pros::delay(250);
+    chassis.turnToHeading(0, 500);
+    chassis.moveToPose(11.5 , 23, 0,1750);
+    set_lift_target(-165, 70);
+    pros::delay(1750);
+    set_lift_target(-160, 100);
+    intake_motor.move(-30);
+    pros::delay(1000);
+    set_lift_target(0, 85);
+    pros::delay(500);
+    intake_motor.move(-30);
+    chassis.moveToPoint(11.5, -6, 1000,{.forwards=false,.minSpeed = 50});
+    intake_motor.move(127);
+    chassis.turnToHeading(-90, 1000);
+    chassis.moveToPose(-1.5, -6, -90,1250);
+    chassis.moveToPose(11.5,-6, -90,750,{.forwards=false});
+    chassis.moveToPose(54, 6, 90, 4000,{.minSpeed = 50});
+    pros::delay(1000);
+    set_lift_target(-150, 100);
+    pros::delay(1250);
+    intake_motor.move(-30);
+    set_lift_target(-0, 100);
+    pros::delay(250);
+    intake_motor.move(0);
 }
 
 void blue_left_elims_auton() {

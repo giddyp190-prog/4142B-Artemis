@@ -5,6 +5,7 @@
 #include <algorithm>
 
 double target_position = 0.0;
+double target_speed = 0;
 
 lemlib::PID lift_pid(
     2.2,
@@ -28,21 +29,22 @@ void lift_logic() {
         //get output power from Lemlib PID API (-127 to 127)
         double output = lift_pid.update(error);
 
-        if (current_position <= -790.0 && output < 0.0) {
+        if (current_position <= -700.0 && output < 0.0) {
             output = 0.0;
         }
-        // Assuming 0 is your starting point, prevent it from grinding against the bottom limit.
+        //0 is the starting point, prevent it from grinding against the bottom limit.
         else if (current_position >= 0.0 && output > 0.0) {
             output = 0.0;
         }
         
         //command the lift motors
-        lift_motors.move(output);
+        lift_motors.move(output * target_speed);
         
         pros::delay(20); // Run every 20ms
     }
 }
 
-void set_lift_target(double degrees) {
-    target_position = std::clamp(degrees, -790.0, 0.0);
+void set_lift_target(double degrees, double speed) {
+    target_position = std::clamp(degrees, -700.0, 0.0);
+    target_speed = speed / 100;
 }

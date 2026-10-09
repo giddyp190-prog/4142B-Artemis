@@ -9,6 +9,6 @@ extern pros::Task* lift_task;
 
 void lift_logic();
 
-void set_lift_target(double degrees);
+void set_lift_target(double degrees, double speed);
 
 #endif 

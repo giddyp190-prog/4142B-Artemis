@@ -49,7 +49,7 @@ void disabled() {
 void competition_initialize() {
 	if(!selector->is_auton_selected()) // if no auton selected
 	{
-		chassis.setPose(0,0,0); // reset chassis cords
+	    chassis.setPose(0,0,0); // reset chassis cords
 
 		chassis.moveToPoint(0, 1, 2000); // move forward an inch to not touch wall
 	}
@@ -120,9 +120,9 @@ void opcontrol() {
             intake_motor.move(60);
         }
 
-        double current_position = -lift_encoder.get_position() / 100.0;
+        double current_position = -lift_encoder.get_position() / 100.0; //gets current position of lift in degrees
 
-        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && current_position < 700.0) {
+        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && current_position < 700.0) { //limits lift going past 700 degrees
             lift_motors.move(-70);
         } else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && current_position > 0.0) {
             lift_motors.move(70);
@@ -130,7 +130,11 @@ void opcontrol() {
             lift_motors.move(0);
         }
 
-        controller.print(1, 0, "Lift: %f", current_position);
+        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+            lift_encoder.reset(); // zeros the lift sensor
+        }
+
+        controller.print(1, 0, "Lift: %f", current_position);// debug for lift position
 
         chassis.curvature(leftY, rightX); // main drive function
 
