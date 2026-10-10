@@ -8,7 +8,7 @@ double target_position = 0.0;
 double target_speed = 0;
 
 lemlib::PID lift_pid(
-    2.2,
+    2.4,
     0.0, 
     3.0,
     false
@@ -37,6 +37,8 @@ void lift_logic() {
             output = 0.0;
         }
         
+        controller.print(1, 0, "Lift: %f", current_position);// debug for lift position
+
         //command the lift motors
         lift_motors.move(output * target_speed);
         

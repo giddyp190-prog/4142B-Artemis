@@ -67,20 +67,9 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    selector->run_selected_auton(); // run the selected auton
+    //selector->run_selected_auton(); // run the selected auton
 
-    selector->run_auton("Red Left");
-   //chassis.moveToPoint(0, -9.2, 2000, {.minSpeed = 50});
-   /*lift_motors.move(-50);
-    pros::delay(1500);
-     lift_motors.move(0);
-     pros::delay(1000);
-    intake_motor.move(-30);
-    pros::delay(250);
-    intake_motor.move(0);
-    chassis.moveToPoint(-10, 13.22, 20000, {.forwards = false});
-     //chassis.moveToPose(8.2, 1.5, 180, 2000);
-    //intake_motor.move(50);*/
+    selector->run_auton("Red Left"); //ONLY UNCOMMENT WHEN TESTING
 }
 
 /**
@@ -100,7 +89,7 @@ void autonomous() {
 // max = -810
 void opcontrol() {
     if (lift_task != nullptr) {
-        lift_task->remove(); 
+        lift_task->remove(); // removes lift PID task to move lift freely in opcontrol
         lift_task = nullptr; // Reset pointer for safety
     }
 
@@ -112,6 +101,7 @@ void opcontrol() {
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
+        //ratchet claw subsystem
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake_motor.move(127);
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
@@ -120,6 +110,7 @@ void opcontrol() {
             intake_motor.move(60);
         }
 
+        //lift subsystem
         double current_position = -lift_encoder.get_position() / 100.0; //gets current position of lift in degrees
 
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && current_position < 700.0) { //limits lift going past 700 degrees
@@ -138,6 +129,7 @@ void opcontrol() {
 
         chassis.curvature(leftY, rightX); // main drive function
 
+        // print chassis pose to screen for debugging
         pros::screen::set_pen(pros::c::COLOR_WHITE);
         pros::screen::print(pros::E_TEXT_SMALL, 9, "X: %f", chassis.getPose().x);
         pros::screen::print(pros::E_TEXT_SMALL, 10, "Y: %f", chassis.getPose().y);
