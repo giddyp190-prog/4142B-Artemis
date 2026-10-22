@@ -4,7 +4,6 @@
 #include "robotConfigs.h"
 #include "titanselect/titanselect.hpp"
 
-#include "subsystems/intake.h"
 #include "subsystems/lift.h"
 
 ts::selector* selector = ts::selector::get();
@@ -47,12 +46,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-	if(!selector->is_auton_selected()) // if no auton selected
-	{
-	    chassis.setPose(0,0,0); // reset chassis cords
 
-		chassis.moveToPoint(0, 1, 2000); // move forward an inch to not touch wall
-	}
 }
 
 /**
@@ -67,9 +61,52 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    //selector->run_selected_auton(); // run the selected auton
 
-    selector->run_auton("Red Left"); //ONLY UNCOMMENT WHEN TESTING
+
+   // selector->run_selected_auton(); // run the selected auton
+  /**/ // chassis.setPose(0,0,0);
+  //  pros::delay(200);
+  ///  chassis.moveToPose(6, 24, 90, 3000);
+  //  pros::delay(100);
+   // chassis.turnToHeading(90, 1500);
+    
+    chassis.setPose(0,0,0);
+    intake_motor.move(80);
+    chassis.moveToPoint(0, 13, 1000);
+    pros::delay(100);
+    chassis.turnToHeading(-90, 1000);
+    pros::delay(100);
+    set_lift_target(-90, 95); 
+    chassis.moveToPoint(-16, 13, 1000);
+    /*chassis.moveToPose(0,15,0, 500,{.minSpeed = 60});
+    chassis.moveToPose(0,12,0, 250,{.forwards=false,.minSpeed = 60});
+    chassis.moveToPose(19.5, 13, 90, 1750);*/ 
+    pros::delay(100);
+    set_lift_target(-10, 95);
+    pros::delay(500);
+    intake_motor.move(-127);
+    pros::delay(100);
+    set_lift_target(-10, 85);
+    pros::delay(100);
+    chassis.moveToPoint(5, 13, 500, {.forwards=false});
+    //chassis.moveToPose(-7, 13.22, 90, 750, {.forwards=false,.minSpeed = 60});
+    intake_motor.move(127);
+    chassis.turnToHeading(180, 500);
+    chassis.moveToPoint(4, 1, 1500);
+    pros::delay(500);
+    chassis.moveToPoint(4, 8, 1250,{.forwards=false});
+    chassis.moveToPose(-4, 59, 0, 20000);
+    pros::delay(1250);
+    set_lift_target(-175, 100);
+    pros::delay(1000);   
+    //set_lift_target(-40, 95);
+    intake_motor.move(-60);
+    set_lift_target(-0, 100);
+    pros::delay(500);
+    intake_motor.move(127);
+    chassis.moveToPoint(0, 30, 1000, {.forwards=false});
+     chassis.moveToPose(4, 1,180, 2000);
+
 }
 
 /**

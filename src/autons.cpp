@@ -6,9 +6,9 @@
 #include "subsystems/lift.h"
 
 // lateral PID controller
-lemlib::ControllerSettings lateral_controller_settings(7.4, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              0, // derivative gain (kD)
+lemlib::ControllerSettings lateral_controller_settings(5, // proportional gain (kP)
+                                              0.25,// integral gain (kI)
+                                              0.01, // derivative gain (kD)
                                               3, // anti windup
                                               0.5, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -18,15 +18,15 @@ lemlib::ControllerSettings lateral_controller_settings(7.4, // proportional gain
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller_settings(1.9, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              10.405, // derivative gain (kD)
+lemlib::ControllerSettings angular_controller_settings(1.8, // proportional gain (kP)
+                                              0.15,// integral gain (kI)
+                                              0.01, //rivative gain (kD)
                                               3, // anti windup
                                               0.25, // small error range, in degrees
                                               100, // small error range timeout, in milliseconds
                                               0.5, // large error range, in degrees
                                               500, // large error range timeout, in milliseconds
-                                              0 // maximum acceleration (slew)
+                                              20 // maximum acceleration (slew)
 );
 
 ts::auton red_L("Red Left", red_left_auton);
@@ -70,7 +70,8 @@ void red_left_auton() {
     set_lift_target(-175, 100);
     pros::delay(1000);   
     //set_lift_target(-40, 95);
-    intake_motor.move(-30);
+    intake_motor.move(-60);
+    pros::delay(100);
     set_lift_target(-0, 100);
     pros::delay(500);
     intake_motor.move(0);
@@ -81,7 +82,7 @@ void red_left_auton() {
     chassis.moveToPoint(40,-7, 2000, {.forwards=false, .minSpeed = 127});
     //set_lift_target(-400, 95);
     pros::delay(250);
-    set_lift_target(0, 95);
+    set_lift_target(-20, 95);
     //chassis.moveToPose(53, -5, 0, 1250,{.forwards=false, .minSpeed = 120});
     chassis.moveToPoint(40, -7, 1000, {.minSpeed = 127});
 }
@@ -99,10 +100,10 @@ void red_right_auton() {
     pros::delay(1000);
     set_lift_target(-10, 95);
     pros::delay(250);
-    intake_motor.move(-30);
-    pros::delay(100);
+    intake_motor.move(-127);
+    pros::delay(1000);
     set_lift_target(-10, 85);
-    pros::delay(250);
+    pros::delay(500);
     chassis.moveToPoint(4.5, 13, 500, {.forwards=false});
     //chassis.moveToPose(-7, 13.22, 90, 750, {.forwards=false,.minSpeed = 60});
     intake_motor.move(127);
@@ -115,20 +116,12 @@ void red_right_auton() {
     set_lift_target(-175, 100);
     pros::delay(1000);   
     //set_lift_target(-40, 95);
-    intake_motor.move(-30);
+    intake_motor.move(-60);
     set_lift_target(-0, 100);
     pros::delay(500);
-    intake_motor.move(0);
+    intake_motor.move(127);
     chassis.moveToPoint(0, 30, 1000, {.forwards=false});
-    chassis.turnToHeading(-90, 1000);
-    chassis.moveToPoint(-40, 30, 2000, {.forwards=false, .minSpeed = 100});
-    chassis.turnToHeading(0, 500);
-    chassis.moveToPoint(-40,-7, 2000, {.forwards=false, .minSpeed = 127});
-    //set_lift_target(-400, 95);
-    pros::delay(250);
-    set_lift_target(0, 95);
-    //chassis.moveToPose(53, -5, 0, 1250,{.forwards=false, .minSpeed = 120});
-    chassis.moveToPoint(-40, -7, 1000, {.minSpeed = 127});
+     chassis.moveToPose(4, 1,180, 2000);
      
 }
 
@@ -280,4 +273,18 @@ void blue_right_elims_auton() {
 
 void programming_skills_auton() {
     chassis.setPose(0,0,0);
+
+    intake_motor.move(127);
+    chassis.moveToPoint(0, -27, 1000, {.forwards = false});
+    set_lift_target(-100, 50);
+    chassis.turnToHeading(90, 1000);
+    chassis.moveToPoint(61.2, -27, 2000, {.maxSpeed = 60});
+    chassis.turnToHeading(180, 1000);
+    chassis.moveToPoint(61.2, -52, 2000, {.maxSpeed = 60});
+    set_lift_target(-300, 50);
+    chassis.moveToPoint(61.2, -65, 2500, {.maxSpeed = 30}, false);
+    set_lift_target(-100, 10);
+    pros::delay(500);
+    intake_motor.move(-60);
+    chassis.moveToPoint(61.2, -52, 1000);
 }
