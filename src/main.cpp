@@ -72,23 +72,23 @@ void autonomous() {
     
     chassis.setPose(0,0,0);
     intake_motor.move(80);
-    chassis.moveToPoint(0, 13, 1000);
-    pros::delay(100);
+    chassis.moveToPose(0, 15, 0, 1500);
+    pros::delay(250);
     chassis.turnToHeading(-90, 1000);
-    pros::delay(100);
+    pros::delay(250);
     set_lift_target(-90, 95); 
-    chassis.moveToPoint(-16, 13, 1000);
+    chassis.moveToPose(-16, 15, -90, 2000);
     /*chassis.moveToPose(0,15,0, 500,{.minSpeed = 60});
     chassis.moveToPose(0,12,0, 250,{.forwards=false,.minSpeed = 60});
     chassis.moveToPose(19.5, 13, 90, 1750);*/ 
-    pros::delay(100);
+    pros::delay(250);
     set_lift_target(-10, 95);
     pros::delay(500);
     intake_motor.move(-127);
-    pros::delay(100);
+    pros::delay(250);
     set_lift_target(-10, 85);
-    pros::delay(100);
-    chassis.moveToPoint(5, 13, 500, {.forwards=false});
+    pros::delay(250);
+    chassis.moveToPose(5, 13, -90, 2000, {.forwards=false});
     //chassis.moveToPose(-7, 13.22, 90, 750, {.forwards=false,.minSpeed = 60});
     intake_motor.move(127);
     chassis.turnToHeading(180, 500);
