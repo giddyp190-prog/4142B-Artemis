@@ -64,48 +64,10 @@ void autonomous() {
 
 
    // selector->run_selected_auton(); // run the selected auton
-  /**/ // chassis.setPose(0,0,0);
-  //  pros::delay(200);
-  ///  chassis.moveToPose(6, 24, 90, 3000);
-  //  pros::delay(100);
-   // chassis.turnToHeading(90, 1500);
-    
-    chassis.setPose(0,0,0);
-    intake_motor.move(80);
-    chassis.moveToPose(0, 15, 0, 1500);
-    pros::delay(250);
-    chassis.turnToHeading(-90, 1000);
-    pros::delay(250);
-    set_lift_target(-90, 95); 
-    chassis.moveToPose(-16, 15, -90, 2000);
-    /*chassis.moveToPose(0,15,0, 500,{.minSpeed = 60});
-    chassis.moveToPose(0,12,0, 250,{.forwards=false,.minSpeed = 60});
-    chassis.moveToPose(19.5, 13, 90, 1750);*/ 
-    pros::delay(250);
-    set_lift_target(-10, 95);
-    pros::delay(500);
-    intake_motor.move(-127);
-    pros::delay(250);
-    set_lift_target(-10, 85);
-    pros::delay(250);
-    chassis.moveToPose(5, 13, -90, 2000, {.forwards=false});
-    //chassis.moveToPose(-7, 13.22, 90, 750, {.forwards=false,.minSpeed = 60});
-    intake_motor.move(127);
-    chassis.turnToHeading(180, 500);
-    chassis.moveToPoint(4, 1, 1500);
-    pros::delay(500);
-    chassis.moveToPoint(4, 8, 1250,{.forwards=false});
-    chassis.moveToPose(-4, 59, 0, 20000);
-    pros::delay(1250);
-    set_lift_target(-175, 100);
-    pros::delay(1000);   
-    //set_lift_target(-40, 95);
-    intake_motor.move(-60);
-    set_lift_target(-0, 100);
-    pros::delay(500);
-    intake_motor.move(127);
-    chassis.moveToPoint(0, 30, 1000, {.forwards=false});
-     chassis.moveToPose(4, 1,180, 2000);
+  chassis.setPose(0,0,0);
+  intake_motor.move(127);
+  pros::delay(250);
+  chassis.moveToPoint(0,-41,1500,{.forwards=false});
 
 }
 
@@ -113,7 +75,7 @@ void autonomous() {
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
  * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
+ * control mode.-
  *
  * If no competition control is connected, this function will run immediately
  * following initialize().
@@ -140,11 +102,11 @@ void opcontrol() {
 
         //ratchet claw subsystem
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            intake_motor.move(127);
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
             intake_motor.move(-60);
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            intake_motor.move(127);
         } else {
-            intake_motor.move(60);
+            intake_motor.move(0);
         }
 
         //lift subsystem
@@ -158,7 +120,7 @@ void opcontrol() {
             lift_motors.move(0);
         }
 
-        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) { 
             lift_encoder.reset(); // zeros the lift sensor
         }
 
